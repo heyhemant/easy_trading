@@ -1,0 +1,42 @@
+{
+    "status": "success",
+    "data": {
+        "stats": {
+            "total": 3,
+            "totalMarkets": 4,
+            "totalExchanges": 1,
+            "totalMarketCap": "0",
+            "total24hVolume": "503104376.06373006"
+        },
+        "coins": [
+            {
+                "uuid": "Qwsogvtv82FCd",
+                "symbol": "BTC",
+                "name": "Bitcoin",
+                "color": "#f7931A",
+                "iconUrl": "https://cdn.coinranking.com/Sy33Krudb/btc.svg",
+                "marketCap": "159393904304",
+                "price": "9370.9993109108",
+                "btcPrice": "1",
+                "listedAt": 1483228800,
+                "change": "-0.52",
+                "rank": 1,
+                "sparkline": [
+                    "9515.0454185372",
+                    "9540.1812284677",
+                    "9554.2212643043",
+                    "9593.571539283",
+                    "9592.8596962985",
+                    "9562.5310295967",
+                    "9556.7860427046",
+                    "9388.823394515",
+                    "9335.3004209165",
+                    "9329.4331700521",
+                    "9370.9993109108"
+                ],
+                "coinrankingUrl": "https://coinranking.com/coin/Qwsogvtv82FCd+bitcoin-btc",
+                "24hVolume": "6818750000"
+            }
+        ]
+    }
+}

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "383090403569",
+    "project_id": "easy-trade-e106b",
+    "storage_bucket": "easy-trade-e106b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383090403569:android:eade1bc864880452136150",
+        "android_client_info": {
+          "package_name": "com.heyhemant.demo_stock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "383090403569-isppq1sncpho3m4jb3sd8frkadqht38n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.heyhemant.demo_stock",
+            "certificate_hash": "2a157ce63cbd63f0873f92eec05d58589f5cb15a"
+          }
+        },
+        {
+          "client_id": "383090403569-k0mhcfad0vutrs3ovpdbcah3a6d874r0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPSp1PXRCTYlg-N3a1RnJiOwGdlpRKtMI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "383090403569-k0mhcfad0vutrs3ovpdbcah3a6d874r0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
