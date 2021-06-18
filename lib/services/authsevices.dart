@@ -1,6 +1,7 @@
-import 'package:demo_stock/pages/HomePage.dart';
+import 'package:demo_stock/pages/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthServices {
@@ -15,8 +16,8 @@ class AuthServices {
           AuthResult result = await _auth.signInWithCredential(credential);
           FirebaseUser _user = result.user;
           if (_user != null) {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomePage()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => NavigationBar()));
             return _user;
           } else {
             print('Error Uchiha');
@@ -54,7 +55,7 @@ class AuthServices {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => HomePage()));
+                                      builder: (context) => NavigationBar()));
                               return _user;
                             } else {
                               print('Error Uchiha');
@@ -69,23 +70,37 @@ class AuthServices {
         timeout: Duration(seconds: 60));
   }
 
-  Future<FirebaseUser> signup(String email, String pass) async {
+  Future<FirebaseUser> signup(
+      String email, String pass, BuildContext context) async {
+    String message = 'Error occur';
     try {
       FirebaseAuth _auth = FirebaseAuth.instance;
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: pass);
       FirebaseUser _user = result.user;
-      if (_user == null) {
-        SnackBar(content: Text('Failed Motherfucker !!!'));
-        return null;
-      } else {
-        SnackBar(
-          content: Text('Welcome'),
-        );
-        return _user;
-      }
-    } catch (e) {
+      return _user;
+    } on PlatformException catch (e) {
+      if (e.code == 'ERROR_INVALID_EMAIL')
+        message = 'Enter a vaild Email Address';
+      if (e.code == 'ERROR_WEAK_PASSWORD') message = 'Enter a strong password';
+      if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE')
+        message = 'Already Registred Email, \n Please login';
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (contex) => AlertDialog(
+                title: Text('Error'),
+                content: Text(message),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: () async {
+                        Navigator.pop(contex);
+                      },
+                      child: Text('Ok')),
+                ],
+              ));
       print(e);
+      return null;
     }
   }
 
@@ -107,8 +122,8 @@ class AuthServices {
     }
   }
 
-  Future<FirebaseUser> signInEmail(
-      TextEditingController _email, TextEditingController _pass) async {
+  Future<FirebaseUser> signInEmail(TextEditingController _email,
+      TextEditingController _pass, BuildContext context) async {
     FirebaseUser _user;
     FirebaseAuth _auth = FirebaseAuth.instance;
     try {
@@ -124,8 +139,30 @@ class AuthServices {
         );
         return _user;
       }
-    } catch (e) {
-      print(e);
+    } on PlatformException catch (e) {
+      String message = 'Error';
+      if (e.code == 'ERROR_INVALID_EMAIL')
+        message = 'Invaild Email Address Found';
+      else if (e.message == 'ERROR_USER_NOT_FOUND')
+        message = 'User not registered';
+      else if (e.code == 'ERROR_WRONG_PASSWORD')
+        message = 'Wrong password entered \n please enter Correct password';
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (contex) => AlertDialog(
+                title: Text('Error'),
+                content: Text(message),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: () async {
+                        _pass.clear();
+                        Navigator.pop(contex);
+                      },
+                      child: Text('Ok')),
+                ],
+              ));
+      print(e.code);
       return null;
     }
   }

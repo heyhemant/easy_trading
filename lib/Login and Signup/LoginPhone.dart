@@ -1,7 +1,8 @@
 import 'package:demo_stock/Login%20and%20Signup/constants.dart';
 import 'package:demo_stock/Login%20and%20Signup/loginpage.dart';
 import 'package:demo_stock/Login%20and%20Signup/signup.dart';
-import 'package:demo_stock/pages/HomePage.dart';
+import 'package:demo_stock/pages/navigation.dart';
+
 import 'package:demo_stock/services/authsevices.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -172,7 +173,7 @@ class _LoginPhoneScreenState extends State<LoginPhoneScreen> {
                 FirebaseUser _user = await AuthServices().logingoogle();
                 if (_user != null) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
+                      MaterialPageRoute(builder: (context) => NavigationBar()));
                 } else {
                   SnackBar(
                     content: Text('Error'),

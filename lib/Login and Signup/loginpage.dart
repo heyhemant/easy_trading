@@ -1,7 +1,7 @@
 import 'package:demo_stock/Login%20and%20Signup/LoginPhone.dart';
 import 'package:demo_stock/Login%20and%20Signup/constants.dart';
 import 'package:demo_stock/Login%20and%20Signup/signup.dart';
-import 'package:demo_stock/pages/HomePage.dart';
+import 'package:demo_stock/pages/navigation.dart';
 import 'package:demo_stock/services/authsevices.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -97,10 +97,11 @@ class _LoginScreenState extends State<LoginScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
-          FirebaseUser _user = await AuthServices().signInEmail(_email, _pass);
+          FirebaseUser _user =
+              await AuthServices().signInEmail(_email, _pass, context);
           if (_user != null) {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomePage()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => NavigationBar()));
           } else {
             SnackBar(
               content: Text('Error Madarchod'),
@@ -187,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
               FirebaseUser _user = await AuthServices().logingoogle();
               if (_user != null) {
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => HomePage()));
+                    MaterialPageRoute(builder: (context) => NavigationBar()));
               } else {
                 print('Error Uchiha');
               }

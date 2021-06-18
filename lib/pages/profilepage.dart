@@ -90,12 +90,37 @@ class _ProfilePageState extends State<ProfilePage> {
                                     itemCount: snapshot.data.length,
                                     itemBuilder: (context, i) {
                                       if (snapshot.data[i].value == 0) {
-                                        return null;
+                                        return SizedBox(
+                                          height: 0.0,
+                                        );
                                       } else {
-                                        return ListTile(
-                                          title: Text(snapshot.data[i].name),
-                                          trailing: Text(snapshot.data[i].value
-                                              .toString()),
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              color: Colors.black87,
+                                            ),
+                                            child: ListTile(
+                                              leading: CircleAvatar(
+                                                child: Image(
+                                                  image: NetworkImage(
+                                                      snapshot.data[i].icon),
+                                                ),
+                                              ),
+                                              title: Text(
+                                                snapshot.data[i].name,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              trailing: Text(
+                                                  snapshot.data[i].value
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color: Colors.white)),
+                                            ),
+                                          ),
                                         );
                                       }
                                     }),
@@ -124,8 +149,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 context: context,
                 barrierDismissible: false,
                 builder: (contex) => AlertDialog(
-                      title: Text('Enter Code'),
-                      content: Text('You Don\'t have enough USD'),
+                      title: Text('Cofirmation'),
+                      content: Text('Are you want to sign out?'),
                       actions: <Widget>[
                         TextButton(
                             onPressed: () async {
@@ -154,7 +179,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         SizedBox(height: 10),
         Text(
-          'Total Value',
+          'Available USD',
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         Text(

@@ -1,8 +1,7 @@
 import 'package:demo_stock/Login%20and%20Signup/LoginPhone.dart';
 import 'package:demo_stock/Login%20and%20Signup/constants.dart';
 import 'package:demo_stock/Login%20and%20Signup/loginpage.dart';
-import 'package:demo_stock/main.dart';
-import 'package:demo_stock/pages/HomePage.dart';
+import 'package:demo_stock/pages/navigation.dart';
 import 'package:demo_stock/services/authsevices.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -149,19 +148,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
           try {
             FirebaseUser _user;
             if (_formKey.currentState.validate()) {
-              if (_pass.text == _repass.text) {
+              if (_pass.text.trim() == _repass.text.trim()) {
                 _user = await AuthServices()
-                    .signup(_email.text.trim(), _pass.text.trim());
-                //  await AuthServices().signInEmail(_email, _pass);
+                    .signup(_email.text.trim(), _pass.text.trim(), context);
                 if (_user != null) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
-                } else {
-                  print('Error Uchiha');
-                }
+                      MaterialPageRoute(builder: (context) => NavigationBar()));
+                } 
+              } else {
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (contex) => AlertDialog(
+                          title: Text('Error'),
+                          content: Text('Password not matched'),
+                          actions: <Widget>[
+                            TextButton(
+                                onPressed: () async {
+                                  _pass.clear();
+                                  Navigator.pop(contex);
+                                },
+                                child: Text('Ok')),
+                          ],
+                        ));
               }
-            } else {
-              print('HEna');
             }
           } catch (e) {
             SnackBar(
@@ -250,7 +260,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 FirebaseUser _user = await AuthServices().logingoogle();
                 if (_user != null) {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
+                      MaterialPageRoute(builder: (context) => NavigationBar()));
                 } else {
                   SnackBar(
                     content: Text('Error'),

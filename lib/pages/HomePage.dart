@@ -3,9 +3,9 @@ import 'package:demo_stock/models/AllCoins.dart';
 import 'package:demo_stock/pages/details.dart';
 import 'package:demo_stock/services/authsevices.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:demo_stock/services/httpservice.dart';
 import "package:flutter/material.dart";
+import 'package:slimy_card/slimy_card.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -32,18 +32,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ignore: deprecated_member_use
-      floatingActionButton: FlatButton(
-        child: CircleAvatar(
-          child: Icon(Icons.exit_to_app),
-          radius: 30,
-        ),
-        onPressed: () {
-          AuthServices().signOut();
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => MyApp()));
-        },
-      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -77,66 +65,50 @@ class _HomePageState extends State<HomePage> {
                       if (snapshot.hasError)
                         return Center(child: Text('Error: ${snapshot.error}'));
                       else {
-                        return ListView.builder(
-                          itemCount: snapshot.data.data.coins.length,
-                          itemBuilder: (context, index) {
-                            if (double.parse(
-                                    snapshot.data.data.coins[index].change) >=
-                                0.0) {
-                              _arrow = Icons.arrow_circle_up;
-                              _changecolor = Colors.green[700];
-                            } else {
-                              _arrow = Icons.arrow_circle_down;
-                              _changecolor = Colors.red[900];
-                            }
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 8, 10, 3),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: _color[index % _color.length]),
-                                padding: EdgeInsets.fromLTRB(8, 5, 7, 2),
-                                child: ListTile(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => Details(
-                                                uuid: snapshot.data.data
-                                                    .coins[index].uuid)));
-                                  },
-                                  subtitle: Text(
-                                      '${double.parse((snapshot.data.data.coins[index].price)).toStringAsFixed(5)} USD',
-                                      style: GoogleFonts.nunito(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black)),
-                                  leading: Image.network(
-                                    '${snapshot.data.data.coins[index].iconUrl.replaceAll('.svg', '.png')}',
-                                    height: 42.0,
-                                    width: 42.0,
-                                  ),
-                                  title: Text(
-                                      snapshot.data.data.coins[index].name,
-                                      style: GoogleFonts.openSans(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold)),
-                                  trailing: Column(children: [
-                                    Icon(
-                                      _arrow,
-                                      color: _changecolor,
+                        return StreamBuilder(
+                            stream: slimyCard.stream,
+                            builder: (context, snap) {
+                              return ListView.builder(
+                                itemCount: snapshot.data.data.coins.length,
+                                itemBuilder: (context, index) {
+                                  if (double.parse(snapshot
+                                          .data.data.coins[index].change) >=
+                                      0.0) {
+                                    _arrow = Icons.arrow_circle_up;
+                                    _changecolor =
+                                        Colors.lightGreenAccent.shade700;
+                                  } else {
+                                    _arrow = Icons.arrow_circle_down;
+                                    _changecolor = Colors.redAccent[700];
+                                  }
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(30, 8, 30, 3),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          color: _color[index % _color.length]),
+                                      padding: EdgeInsets.fromLTRB(8, 5, 7, 2),
+                                      child: SlimyCard(
+                                        topCardHeight: 210,
+                                        width: 300,
+                                        bottomCardHeight: 150,
+                                        color: _changecolor,
+                                        slimeEnabled: true,
+                                        topCardWidget: topCardWidget(
+                                            snapshot
+                                                .data.data.coins[index].iconUrl
+                                                .replaceAll('.svg', '.png'),
+                                            snapshot.data.data.coins[index]),
+                                        bottomCardWidget: bottomCardWidget(
+                                            snapshot.data.data.coins[index]),
+                                      ),
                                     ),
-                                    Text(
-                                        '${double.parse((snapshot.data.data.coins[index].change)).toStringAsFixed(3)}%',
-                                        style: GoogleFonts.sourceCodePro(
-                                            fontSize: 15,
-                                            color: _changecolor,
-                                            fontWeight: FontWeight.bold)),
-                                  ]),
-                                ),
-                              ),
-                            );
-                          },
-                        );
+                                  );
+                                },
+                              );
+                            });
                       }
                     }
                   }),
@@ -145,5 +117,71 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Widget topCardWidget(String imagePath, Coin coin) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        MaterialButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => Details(coin: coin)));
+            },
+            child: Image(
+              image: NetworkImage(imagePath),
+              height: 70,
+              width: 70,
+            )),
+        SizedBox(height: 15),
+        Text(
+          coin.name,
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        SizedBox(height: 15),
+        Text(
+          double.parse(coin.price).toStringAsFixed(4),
+          style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 17,
+              fontWeight: FontWeight.w500),
+        ),
+        SizedBox(height: 10),
+        
+      ],
+    );
+  }
+
+  Widget bottomCardWidget(Coin coin) {
+    return Column(children: [
+      SizedBox(
+        height: 10,
+      ),
+      Text(
+        double.parse(coin.change) >= 0
+            ? 'Has Rised ${double.parse(coin.change).toStringAsFixed(3)}% in last\n 24 Hours'
+            : 'Has Fallan ${double.parse(coin.change).toStringAsFixed(3)}% in last\n24 Hours',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 21,
+          fontWeight: FontWeight.w500,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      Text(
+        double.parse(coin.change) >= 0
+            ? 'No once know when crypto falls \n So be cearful'
+            : 'In a long run it will definatly goes UP',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    ]);
   }
 }
