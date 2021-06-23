@@ -16,12 +16,13 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   double totalUSD = null;
 
-  UserData userData = null;
+  UserData userData;
   TextEditingController _usd = TextEditingController();
 
   void getData() async {
-    UserAssets a = await DatabaseServices().getAsset("USD");
+    UserAssets a = await DatabaseServices().getAsset('USD');
     UserData temp = await DatabaseServices().getUserData();
+    print('${temp.name}    $a');
     setState(() {
       totalUSD = a.value;
       userData = temp;
@@ -156,6 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         TextButton(
                             onPressed: () async {
                               AuthServices().signOut();
+                              Navigator.pop(context);
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

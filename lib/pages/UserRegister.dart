@@ -72,7 +72,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
-          height: 60.0,
+          height: 50.0,
           child: TextField(
             readOnly: email,
             controller: _email,
@@ -108,7 +108,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
-          height: 60.0,
+          height: 50.0,
           child: TextField(
             controller: _name,
             style: TextStyle(
@@ -142,7 +142,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
-          height: 60.0,
+          height: 50.0,
           child: TextField(
             readOnly: mobile,
             keyboardType: TextInputType.phone,
@@ -180,7 +180,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
-          height: 60.0,
+          height: 50.0,
           child: TextField(
             maxLines: 5,
             controller: _add,
@@ -190,6 +190,9 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
+              prefix: SizedBox(
+                width: 25,
+              ),
               contentPadding: EdgeInsets.only(top: 14.0),
               hintText: 'Enter your Address',
               hintStyle: kHintTextStyle,
@@ -229,7 +232,8 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
         onPressed: () async {
           try {
             FirebaseUser _user;
-            if ((image != '' || image != null) &&
+            if (image.isNotEmpty &&
+                image != null &&
                 _name.text != '' &&
                 _email.text != '' &&
                 _mobile.text != '' &&
