@@ -1,9 +1,16 @@
 import 'package:demo_stock/Login%20and%20Signup/loginpage.dart';
+
 import 'package:demo_stock/pages/navigation.dart';
 import "package:flutter/material.dart";
 import 'package:firebase_auth/firebase_auth.dart';
 
-class LandingPage extends StatelessWidget {
+// ignore: must_be_immutable
+class LandingPage extends StatefulWidget {
+  @override
+  _LandingPageState createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<FirebaseUser>(

@@ -199,32 +199,33 @@ class _DetailsState extends State<Details> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextButton(
+                    RaisedButton(
                         onPressed: () async {
                           pair = await DatabaseServices().getPair(coin.name);
                           await DatabaseServices().buyAsset(
                               coin, double.parse(_usd.text), pair, context);
                           setValue();
                         },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
                         child: Text('Buy')),
                     SizedBox(
                       width: 50,
                     ),
-                    TextButton(
+                    RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
                         onPressed: () async {
-                          return ConfirmationSlider(
-                            onConfirmation: () async {
-                              Pair pair =
-                                  await DatabaseServices().getPair(coin.name);
-                              await DatabaseServices().sellAsset(coin,
-                                  double.parse(_selected.text), pair, context);
-                              setValue();
-                            },
-                          );
+                          Pair pair =
+                              await DatabaseServices().getPair(coin.name);
+                          await DatabaseServices().sellAsset(coin,
+                              double.parse(_selected.text), pair, context);
+                          setValue();
                         },
                         child: Text('Sell')),
                   ],
-                  
                 )
               ])),
         ),
@@ -363,7 +364,7 @@ class _DetailsState extends State<Details> {
                   ),
                 ),
               ),
-              hintText: 'Amount In USD',
+              hintText: 'Amount In ${coin.name}',
               hintStyle: kHintTextStyle,
             ),
           )),

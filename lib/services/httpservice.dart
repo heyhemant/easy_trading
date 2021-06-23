@@ -24,7 +24,7 @@ class HttpService {
     try {
       var dio = Dio();
       Response response = await dio.get(
-          'https://min-api.cryptocompare.com/data/v2/histoday?fsym=${coin.symbol.toUpperCase()}&tsym=USD&limit=15');
+          'https://min-api.cryptocompare.com/data/v2/histoday?fsym=${coin.symbol.toUpperCase()}&tsym=USD&limit=100');
       if (response.statusCode == 200) {
         Ohlc temp = Ohlc.fromJson(response.data);
         return getChartData(temp);
@@ -43,7 +43,7 @@ class HttpService {
   }
 
   // ignore: non_constant_identifier_names
-  
+
   // ignore: missing_return
   Future<AllCoins> getCoins() async {
     try {

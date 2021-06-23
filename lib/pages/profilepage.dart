@@ -1,4 +1,5 @@
 import 'package:demo_stock/main.dart';
+import 'package:demo_stock/models/user_data.dart';
 import 'package:demo_stock/services/authsevices.dart';
 import 'package:demo_stock/services/databaseservices.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,28 +14,23 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  double total_usd = null;
-  FirebaseUser user;
-  double total_value = 0;
+  double totalUSD = null;
+
+  UserData userData = null;
   TextEditingController _usd = TextEditingController();
-  void getUser() async {
-    user = await FirebaseAuth.instance.currentUser();
-  }
 
-  void setUSD() async {
-    setState(() {});
-  }
-
-  void getUSD() async {
+  void getData() async {
     UserAssets a = await DatabaseServices().getAsset("USD");
-    total_usd = a.value;
-    setUSD();
+    UserData temp = await DatabaseServices().getUserData();
+    setState(() {
+      totalUSD = a.value;
+      userData = temp;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    getUser();
-    if (total_usd == null) getUSD();
+    if (totalUSD == null || userData == null) getData();
     return SafeArea(
       child: Scaffold(
         body: Stack(children: [
@@ -67,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         topCardHeight: 250,
                         bottomCardHeight: 150,
                         color: Colors.lightBlueAccent.shade700,
-                        topCardWidget: topCardWidget(total_usd),
+                        topCardWidget: topCardWidget(totalUSD),
                         bottomCardWidget: bottomCardWidget(),
                       )),
                       SizedBox(
@@ -171,10 +167,9 @@ class _ProfilePageState extends State<ProfilePage> {
           },
           child: CircleAvatar(
             radius: 45,
-            child: Image(
-              image: NetworkImage(
-                  'https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png'),
-            ),
+            child: userData != null
+                ? Image.network(userData.pic)
+                : CircularProgressIndicator(),
           ),
         ),
         SizedBox(height: 10),
@@ -207,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
         elevation: 5.0,
         onPressed: () async {
           await DatabaseServices().addUSD(100);
-          getUSD();
+          getData();
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(

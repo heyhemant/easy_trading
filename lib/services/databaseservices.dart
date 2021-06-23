@@ -3,9 +3,11 @@ import 'package:demo_stock/models/AllCoins.dart';
 import 'package:demo_stock/models/loneData.dart';
 import 'package:demo_stock/models/pair.dart';
 import 'package:demo_stock/models/transaction.dart';
+import 'package:demo_stock/models/user_data.dart';
 import 'package:demo_stock/models/userassets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class DatabaseServices {
   Future<UserAssets> getAsset(String name) async {
@@ -16,6 +18,57 @@ class DatabaseServices {
     snapshot = await userAssets.document(name).get();
     print(snapshot['Name']);
     return UserAssets(snapshot['Name'], snapshot['Value'], snapshot['Logo']);
+  }
+
+  Future<bool> addUser(UserData data) async {
+    try {
+      FirebaseUser _user = await FirebaseAuth.instance.currentUser();
+      CollectionReference reference =
+          Firestore.instance.collection('UsersData');
+      reference.document(_user.uid).setData({
+        'Name': data.name,
+        'Address': data.address,
+        'Email': data.email,
+        'Mobile': data.mobile,
+        'Pic': data.pic
+      });
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<UserData> getUserData() async {
+    try {
+      FirebaseUser _user = await FirebaseAuth.instance.currentUser();
+      CollectionReference reference =
+          Firestore.instance.collection('UsersData');
+      DocumentSnapshot ds = await reference.document(_user.uid).get();
+      UserData us = UserData(ds.data['Name'], ds.data['Pic'], ds.data['Email'],
+          ds.data['Address'], ds.data['Mobile']);
+      return us;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<int> check() async {
+    try {
+      FirebaseUser _user = await FirebaseAuth.instance.currentUser();
+      CollectionReference reference =
+          Firestore.instance.collection('UsersData');
+      DocumentSnapshot ds = await reference.document(_user.uid).get();
+      if (ds.exists) {
+        print(ds.documentID);
+        return 1;
+      } else
+        return 2;
+    } catch (e) {
+      print(e);
+      return 2;
+    }
   }
 
   Future<List<UserAssets>> getAssets() async {

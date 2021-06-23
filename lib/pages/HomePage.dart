@@ -1,7 +1,7 @@
-import 'package:demo_stock/main.dart';
 import 'package:demo_stock/models/AllCoins.dart';
+import 'package:demo_stock/models/user_data.dart';
 import 'package:demo_stock/pages/details.dart';
-import 'package:demo_stock/services/authsevices.dart';
+import 'package:demo_stock/services/databaseservices.dart';
 import 'package:flutter/services.dart';
 import 'package:demo_stock/services/httpservice.dart';
 import "package:flutter/material.dart";
@@ -13,8 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  IconData _arrow;
-  // ignore: unused_field
   Color _changecolor;
   String today, past;
   List<Color> _color = [
@@ -28,9 +26,19 @@ class _HomePageState extends State<HomePage> {
     Colors.deepOrange[200],
     Colors.indigo[100]
   ];
+  UserData ud;
+  void getUD() async {
+    UserData temp = await DatabaseServices().getUserData();
+    setState(() {
+      ud = temp;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (ud == null) {
+      getUD();
+    }
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -74,11 +82,9 @@ class _HomePageState extends State<HomePage> {
                                   if (double.parse(snapshot
                                           .data.data.coins[index].change) >=
                                       0.0) {
-                                    _arrow = Icons.arrow_circle_up;
                                     _changecolor =
                                         Colors.lightGreenAccent.shade700;
                                   } else {
-                                    _arrow = Icons.arrow_circle_down;
                                     _changecolor = Colors.redAccent[700];
                                   }
                                   return Padding(
@@ -147,7 +153,6 @@ class _HomePageState extends State<HomePage> {
               fontWeight: FontWeight.w500),
         ),
         SizedBox(height: 10),
-        
       ],
     );
   }

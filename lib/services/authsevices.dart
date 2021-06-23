@@ -5,15 +5,76 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthServices {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  Future<void> forgotPassword(String _email, BuildContext context) async {
+    if (_email == null || _email == '') {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (contex) => AlertDialog(
+                title: Text('Error'),
+                content: Text('Please Enter Email Adddress'),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: () async {
+                        Navigator.pop(contex);
+                      },
+                      child: Text('Ok')),
+                ],
+              ));
+    } else {
+      try {
+        await auth.sendPasswordResetEmail(email: _email);
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (contex) => AlertDialog(
+                  title: Text('Sucess'),
+                  content: Text(
+                      'A password reset link has been sent to your email address $_email'),
+                  actions: <Widget>[
+                    TextButton(
+                        onPressed: () async {
+                          Navigator.pop(contex);
+                        },
+                        child: Text('Ok')),
+                  ],
+                ));
+      } on PlatformException catch (e) {
+        print(e.code);
+        print('.....................................................');
+        String message = 'A unexpected error occur';
+        if (e.code == 'ERROR_INVALID_EMAIL')
+          message = 'Enter a vaild email address';
+        if (e.code == 'ERROR_USER_NOT_FOUND')
+          message = 'User not found please register yourself';
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (contex) => AlertDialog(
+                  title: Text('Error'),
+                  content: Text(message),
+                  actions: <Widget>[
+                    TextButton(
+                        onPressed: () async {
+                          Navigator.pop(contex);
+                        },
+                        child: Text('Ok')),
+                  ],
+                ));
+      }
+    }
+  }
+
   Future<FirebaseUser> loginWithPhone(
       String number, BuildContext context) async {
     TextEditingController _codeController = TextEditingController();
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    _auth.verifyPhoneNumber(
+
+    auth.verifyPhoneNumber(
         phoneNumber: number,
         verificationCompleted: (AuthCredential credential) async {
           Navigator.of(context).pop();
-          AuthResult result = await _auth.signInWithCredential(credential);
+          AuthResult result = await auth.signInWithCredential(credential);
           FirebaseUser _user = result.user;
           if (_user != null) {
             Navigator.pushReplacement(context,
@@ -49,7 +110,7 @@ class AuthServices {
                                     verificationId: varifivationId,
                                     smsCode: code);
                             AuthResult result =
-                                await _auth.signInWithCredential(credential);
+                                await auth.signInWithCredential(credential);
                             FirebaseUser _user = result.user;
                             if (_user != null) {
                               Navigator.push(
@@ -74,8 +135,7 @@ class AuthServices {
       String email, String pass, BuildContext context) async {
     String message = 'Error occur';
     try {
-      FirebaseAuth _auth = FirebaseAuth.instance;
-      AuthResult result = await _auth.createUserWithEmailAndPassword(
+      AuthResult result = await auth.createUserWithEmailAndPassword(
           email: email, password: pass);
       FirebaseUser _user = result.user;
       return _user;
@@ -125,9 +185,9 @@ class AuthServices {
   Future<FirebaseUser> signInEmail(TextEditingController _email,
       TextEditingController _pass, BuildContext context) async {
     FirebaseUser _user;
-    FirebaseAuth _auth = FirebaseAuth.instance;
+
     try {
-      AuthResult result = await _auth.signInWithEmailAndPassword(
+      AuthResult result = await auth.signInWithEmailAndPassword(
           email: _email.text, password: _pass.text);
       _user = result.user;
       if (_user == null) {
@@ -140,7 +200,7 @@ class AuthServices {
         return _user;
       }
     } on PlatformException catch (e) {
-      String message = 'Error';
+      String message = 'Please Credetials';
       if (e.code == 'ERROR_INVALID_EMAIL')
         message = 'Invaild Email Address Found';
       else if (e.message == 'ERROR_USER_NOT_FOUND')
@@ -175,4 +235,6 @@ class AuthServices {
       print(e);
     }
   }
+
+  userregistration(String trim, String trim2, BuildContext context) {}
 }

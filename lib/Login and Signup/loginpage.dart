@@ -102,10 +102,6 @@ class _LoginScreenState extends State<LoginScreen> {
           if (_user != null) {
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => NavigationBar()));
-          } else {
-            SnackBar(
-              content: Text('Error Madarchod'),
-            );
           }
         },
         padding: EdgeInsets.all(15.0),
@@ -231,6 +227,20 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget _buildForgotPasswordBtn() {
+    return Container(
+      alignment: Alignment.centerRight,
+      child: FlatButton(
+        onPressed: () => AuthServices().forgotPassword(_email.text, context),
+        padding: EdgeInsets.only(right: 0.0),
+        child: Text(
+          'Forgot Password?',
+          style: kLabelStyle,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -283,6 +293,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 30.0,
                       ),
                       _buildPasswordTF(),
+                      _buildForgotPasswordBtn(),
                       _buildLoginBtn(),
                       _buildSignInWithText(),
                       _buildSocialBtnRow(),
