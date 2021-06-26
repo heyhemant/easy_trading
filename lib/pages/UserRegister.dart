@@ -27,7 +27,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  File _image = null;
+  File _image;
   String url;
 
   final picker = ImagePicker();
@@ -38,27 +38,29 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
 
   void _startUpload(String uid) async {
     String filePath = '$uid.jpeg';
-
-    setState(() {
-      _uploadTask = _storage.ref().child(filePath).putFile(_image);
-      if (_uploadTask.isInProgress) CircularProgressIndicator();
-      _storage.ref().getDownloadURL().then((value) => print(value));
-    });
+    _uploadTask = _storage.ref().child(filePath).putFile(_image);
+    _uploadTask.isInProgress
+        ? CircularProgressIndicator()
+        : _uploadTask.isSuccessful
+            ? _storage.ref().getDownloadURL().then((value) => print(value))
+            : print('Error');
     image = await (await _uploadTask.onComplete).ref.getDownloadURL();
+    setState(() {
+      image = image;
+    });
   }
 
   Future getImage() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        _startUpload(user.uid);
-        print(_image.path);
-      } else {
-        print('No image selected.');
-      }
-    });
+    if (pickedFile != null) {
+      
+      _image = File(pickedFile.path);
+      _startUpload(user.uid);
+      print(_image.path);
+    } else {
+      print('No image selected.');
+    }
   }
 
   Widget _buildEmailTF() {

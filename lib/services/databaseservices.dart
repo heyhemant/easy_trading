@@ -7,7 +7,6 @@ import 'package:demo_stock/models/user_data.dart';
 import 'package:demo_stock/models/userassets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class DatabaseServices {
   Future<UserAssets> getAsset(String name) async {
@@ -16,6 +15,7 @@ class DatabaseServices {
     CollectionReference userAssets =
         Firestore.instance.collection('${_user.uid}-Assets');
     snapshot = await userAssets.document(name).get();
+    if (!snapshot.exists) return null;
     print(snapshot['Name']);
     return UserAssets(snapshot['Name'], snapshot['Value'], snapshot['Logo']);
   }
@@ -45,8 +45,10 @@ class DatabaseServices {
       CollectionReference reference =
           Firestore.instance.collection('UsersData');
       DocumentSnapshot ds = await reference.document(_user.uid).get();
+      print(ds.data);
       UserData us = UserData(ds.data['Name'], ds.data['Pic'], ds.data['Email'],
           ds.data['Address'], ds.data['Mobile']);
+      print(us.pic);
       return us;
     } catch (e) {
       print(e);

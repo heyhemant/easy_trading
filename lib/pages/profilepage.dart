@@ -2,8 +2,6 @@ import 'package:demo_stock/main.dart';
 import 'package:demo_stock/models/user_data.dart';
 import 'package:demo_stock/services/authsevices.dart';
 import 'package:demo_stock/services/databaseservices.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:demo_stock/models/userassets.dart';
 import 'package:slimy_card/slimy_card.dart';
@@ -14,24 +12,24 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  // ignore: avoid_init_to_null
   double totalUSD = null;
 
   UserData userData;
-  TextEditingController _usd = TextEditingController();
 
   void getData() async {
     UserAssets a = await DatabaseServices().getAsset('USD');
     UserData temp = await DatabaseServices().getUserData();
     print('${temp.name}    $a');
     setState(() {
-      totalUSD = a.value;
+      if (a != null) totalUSD = a.value;
       userData = temp;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (totalUSD == null || userData == null) getData();
+    if (userData == null) getData();
     return SafeArea(
       child: Scaffold(
         body: Stack(children: [

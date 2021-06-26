@@ -230,6 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildForgotPasswordBtn() {
     return Container(
       alignment: Alignment.centerRight,
+      // ignore: deprecated_member_use
       child: FlatButton(
         onPressed: () => AuthServices().forgotPassword(_email.text, context),
         padding: EdgeInsets.only(right: 0.0),

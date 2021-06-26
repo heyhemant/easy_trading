@@ -102,6 +102,7 @@ class AuthServices {
                       ],
                     ),
                     actions: <Widget>[
+                      // ignore: deprecated_member_use
                       FlatButton(
                           onPressed: () async {
                             final code = _codeController.text.trim();
@@ -130,6 +131,7 @@ class AuthServices {
         codeAutoRetrievalTimeout: null,
         timeout: Duration(seconds: 60));
   }
+
 
   Future<FirebaseUser> signup(
       String email, String pass, BuildContext context) async {
@@ -200,7 +202,7 @@ class AuthServices {
         return _user;
       }
     } on PlatformException catch (e) {
-      String message = 'Please Credetials';
+      String message = 'Unknown Error ';
       if (e.code == 'ERROR_INVALID_EMAIL')
         message = 'Invaild Email Address Found';
       else if (e.message == 'ERROR_USER_NOT_FOUND')
@@ -235,6 +237,4 @@ class AuthServices {
       print(e);
     }
   }
-
-  userregistration(String trim, String trim2, BuildContext context) {}
 }

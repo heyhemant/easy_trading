@@ -7,7 +7,6 @@ import 'package:demo_stock/pages/lonepage.dart';
 import 'package:demo_stock/services/databaseservices.dart';
 import 'package:flutter/material.dart';
 
-
 class NavigationBar extends StatefulWidget {
   @override
   _NavigationBarState createState() => _NavigationBarState();
@@ -17,6 +16,7 @@ class _NavigationBarState extends State<NavigationBar> {
   int _page = 0;
   final tab = [HomePage(), LonePage(), HistoryPage(), ProfilePage()];
   GlobalKey _bottomNavigationKey = GlobalKey();
+  
   int checking = 0;
   void check() async {
     int temp = await DatabaseServices().check();
@@ -28,7 +28,7 @@ class _NavigationBarState extends State<NavigationBar> {
   @override
   Widget build(BuildContext context) {
     if (checking == 0) {
-      CircularProgressIndicator();
+      Container(child: CircularProgressIndicator());
       check();
     }
 
@@ -58,7 +58,25 @@ class _NavigationBarState extends State<NavigationBar> {
         body: tab[_page],
       );
     } else {
-      return UserRegistrationScreen();
+      return checking == 2
+          ? UserRegistrationScreen()
+          : Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFF73AEF5),
+                    Color(0xFF61A4F1),
+                    Color(0xFF478DE0),
+                    Color(0xFF398AE5),
+                  ],
+                  stops: [0.1, 0.4, 0.7, 0.9],
+                ),
+              ),
+              child: Center(child: CircularProgressIndicator()));
     }
   }
 }

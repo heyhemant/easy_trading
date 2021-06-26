@@ -17,6 +17,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _repass = TextEditingController();
   TextEditingController _pass = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  
   Widget _buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

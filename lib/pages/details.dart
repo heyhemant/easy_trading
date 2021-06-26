@@ -94,7 +94,7 @@ class _DetailsState extends State<Details> {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       else {
                         lowest = snapshot.data[0].low;
-                        for (var i = 0; i < 15; i++) {
+                        for (var i = 0; i < 99; i++) {
                           if (lowest > snapshot.data[i].low)
                             lowest = snapshot.data[i].low;
                         }

@@ -74,6 +74,7 @@ class _LoginPhoneScreenState extends State<LoginPhoneScreen> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
+      // ignore: deprecated_member_use
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () async {
@@ -83,10 +84,8 @@ class _LoginPhoneScreenState extends State<LoginPhoneScreen> {
                 .loginWithPhone('+91' + _phone.text.trim(), context);
 
             if (_user == null) {
-              print("object");
-              SnackBar(
-                content: Text('Error'),
-              );
+              print("Error");
+             
             }
           } catch (e) {
             print(e);

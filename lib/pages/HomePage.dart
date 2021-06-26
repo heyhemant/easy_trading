@@ -1,7 +1,7 @@
 import 'package:demo_stock/models/AllCoins.dart';
-import 'package:demo_stock/models/user_data.dart';
+
 import 'package:demo_stock/pages/details.dart';
-import 'package:demo_stock/services/databaseservices.dart';
+
 import 'package:flutter/services.dart';
 import 'package:demo_stock/services/httpservice.dart';
 import "package:flutter/material.dart";
@@ -26,19 +26,10 @@ class _HomePageState extends State<HomePage> {
     Colors.deepOrange[200],
     Colors.indigo[100]
   ];
-  UserData ud;
-  void getUD() async {
-    UserData temp = await DatabaseServices().getUserData();
-    setState(() {
-      ud = temp;
-    });
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
-    if (ud == null) {
-      getUD();
-    }
+   
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
