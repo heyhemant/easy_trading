@@ -2,6 +2,7 @@ import 'package:demo_stock/pages/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthServices {
@@ -77,6 +78,7 @@ class AuthServices {
           AuthResult result = await auth.signInWithCredential(credential);
           FirebaseUser _user = result.user;
           if (_user != null) {
+            Navigator.pop(context);
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => NavigationBar()));
             return _user;
@@ -114,6 +116,7 @@ class AuthServices {
                                 await auth.signInWithCredential(credential);
                             FirebaseUser _user = result.user;
                             if (_user != null) {
+                              Navigator.pop(context);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -131,7 +134,6 @@ class AuthServices {
         codeAutoRetrievalTimeout: null,
         timeout: Duration(seconds: 60));
   }
-
 
   Future<FirebaseUser> signup(
       String email, String pass, BuildContext context) async {

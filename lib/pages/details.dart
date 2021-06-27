@@ -7,7 +7,6 @@ import 'package:demo_stock/services/databaseservices.dart';
 import 'package:demo_stock/services/httpservice.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter/material.dart';
-import 'package:slide_to_confirm/slide_to_confirm.dart';
 
 class Details extends StatefulWidget {
   final Coin coin;
